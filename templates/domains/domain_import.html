@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+	Domain {% if form.instance.pk %}Edit{% else %}Add{% endif %}
+{% endblock title %}
+
+{% block head %}
+	{{ block.super }}
+	<link href="{% static 'css/bootstrap-datepicker3.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+{% endblock head %}
+
+
+{% block container %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="row text-center">
+						<h3>Import domain</h3>
+						<p>If domain exists - won't rewrite</p>
+						<p>
+							Input format - *.txt or *.csv<br>
+							Separator - <b>;</b><br>
+							Example:
+						</p>
+						<p>
+							domain1.com;<br>
+							domain2.com;<br>
+							domain3.com;<br>
+						</p>
+					</div>
+
+					<div class="panel panel-body">
+						{% if form.errors %}
+							{% for field in form %}
+								{% for error in field.errors %}
+									<div class="alert alert-danger">
+										<strong>{{ error|escape }}</strong>
+									</div>
+								{% endfor %}
+							{% endfor %}
+							{% for error in form.non_field_errors %}
+								<div class="alert alert-danger">
+									<strong>{{ error|escape }}</strong>
+								</div>
+							{% endfor %}
+						{% endif %}
+
+						<div class="row">
+							<form method="POST" action="." class="form-horizontal" enctype="multipart/form-data">
+								{% csrf_token %}
+								<div class="form-group">
+									<label for="username" class="col-md-4 control-label">File:</label>
+									<div class="col-md-4">
+										{{ form.import_file }}
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-md-8 col-md-offset-4">
+										<button type="submit" class="btn btn-primary">Send</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock container %}
+

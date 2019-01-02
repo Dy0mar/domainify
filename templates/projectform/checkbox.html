@@ -1,0 +1,14 @@
+<div{% if field.errors %} class="error"{% endif %}>
+	<label class="checkbox{% if class %} {{ class }}{% endif %}">
+		{{ field }}
+		<i></i>
+		{% if label %}
+			{{ label }}
+		{% else %}
+			{{ field.label }}
+		{% endif %}	
+	</label>
+	<div class="clearfix"></div>
+	{% if field.errors %}<em class="error__bl">{{ field.errors|striptags }}</em>{% endif %}
+</div>
+

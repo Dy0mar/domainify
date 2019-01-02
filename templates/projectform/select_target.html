@@ -1,0 +1,18 @@
+{% load widget_tweaks %}
+
+{% if field.errors %}<div class="error error_absolute">{% endif %}
+	<div class="select select_target{% if class %} {{ class }}{% endif %}">
+		{% if nice_select %}
+			{{ field|add_class:nice_select }}
+		{% else %}
+			{{ field }}
+			<i class="icon down"></i>
+		{% endif %}
+		<span class="label">{% if label %}{{ label }}{% else %}{{ field.label }}{% endif %}</span>
+	</div>
+	{% if not hide_errors %}
+		{% if field.errors %}<em class="error__bl error__bl_fz10">{{ field.errors|striptags }}</em>{% endif %}
+	{% endif %}
+{% if field.errors %}</div>{% endif %}
+
+

@@ -1,0 +1,14 @@
+{% load widget_tweaks %}
+
+{% if field.errors %}<div class="error error_absolute">{% endif %}
+<label class="input input_target{% if class %} {{ class }}{% endif %}">	
+	{% render_field field|attr:"value:"|attr:"onkeyup:this.setAttribute('value', this.value)" %}
+	<span class="label">{% if label %}{{ label }}{% else %}{{ field.label }}{% endif %}</span>
+	{% if visible_tooltip %}<b class="tooltip-form tooltip-form_{{ tooltip_position|default:'bottom-right' }}">{% if tooltip %}{{ tooltip }}{% else %}{{ field.help_text|default:field.label }}{% endif %}</b>{% endif %}
+	{% if icon %}<i class="icon {{ icon }}"></i>{% endif %}
+</label>
+{% if not hide_errors %}
+	{% if field.errors %}<em class="error__bl error__bl_fz10">{{ field.errors|striptags }}</em>{% endif %}
+{% endif %}
+{% if field.errors %}</div>{% endif %}
+

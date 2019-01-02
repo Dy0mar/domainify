@@ -1,0 +1,100 @@
+{% load domains_tag %}
+<tr>
+	<td>{% if data_filters|get_key:'domain_name' %}{{ data_filters|get_key:'domain_name' }}{% endif %}</td>
+	<td>
+		{% if data_filters|get_key:'managers' %}
+			{% for manager in data_filters|get_key:'managers' %}
+				{{ manager.username }}
+			{% endfor %}
+		{% endif %}
+	</td>
+	<td>
+		{% if data_filters|get_key:'admins' %}
+			{% for admin in data_filters|get_key:'admins' %}
+				{{ admin.username }}
+			{% endfor %}
+		{% endif %}
+	</td>
+	<td>{% if data_filters|get_key:'company_name' %}{{ data_filters|get_key:'company_name' }}{% endif %}</td>
+	<td>{% if data_filters|get_key:'telephone' %}{{ data_filters|get_key:'telephone' }}{% endif %}</td>
+	<td>
+		{% if data_filters|get_key:'date_registration_from' %}
+			{{ data_filters|get_key:'date_registration_from'|date:'d.m.Y' }}
+		{% endif %}
+		{% if data_filters|get_key:'date_registration_till' %}
+			- {{ data_filters|get_key:'date_registration_till'|date:'d.m.Y' }}
+		{% endif %}
+	</td>
+	<td>
+		{% if data_filters|get_key:'date_expire_from' %}
+			{{ data_filters|get_key:'date_expire_from'|date:'d.m.Y' }}
+		{% endif %}
+		{% if data_filters|get_key:'date_expire_till' %}
+			- {{ data_filters|get_key:'date_expire_till'|date:'d.m.Y' }}
+		{% endif %}
+	</td>
+	<td></td>
+	<td>
+		{% if data_filters|get_key:'checks_pci' %}
+			{{ data_filters|get_key:'checks_pci' }}
+		{% endif %}
+	</td>
+	<td>
+		{% if data_filters|get_key:'status' %}
+			{{ data_filters|get_key:'status' }}
+		{% endif %}
+	</td>
+	<td>&nbsp;</td>
+</tr>
+{% for domain in domain_list %}
+	<tr {% if domain in notification %} class="alert-danger"{% endif %}>
+		<td>
+			{% if request.user.is_staff or request.user.is_superuser %}
+				<a href="{% url 'domain-detail' domain.pk %}">{{ domain.name }}</a>
+			{% else %}
+				{{ domain.name }}
+			{% endif %}
+		</td>
+		<td>{{ domain.manager|default_if_none:'-' }}</td>
+		<td>{{ domain.admin|default_if_none:'-' }}</td>
+		<td>{{ domain.company_name }}</td>
+		<td>{{ domain.telephone|default_if_none:'' }}
+			{% if domain.telephone2 %}<br>,{{ domain.telephone2 }}&nbsp;{% endif %}
+			{% if domain.telephone3 %}<br>,{{ domain.telephone3 }}&nbsp;{% endif %}
+		</td>
+		<td>{{ domain.date_register|date:"d.m.Y" }}</td>
+		<td>{{ domain.date_expire|date:"d.m.Y" }}</td>
+		<td>{% if form.date_request.value %}{{ form.date_request.value }}{% endif %}</td>
+
+		<td>
+			{% if domain.date_last_scan %}
+				{{ domain.date_last_scan|date:"d.m.Y" }}
+			{% else %}
+				no
+			{% endif %}
+		</td>
+		<td>{{ domain.status }}</td>
+		<td><a href="{% url 'domain-edit' domain.pk %}">Edit</a>&nbsp;/&nbsp;<a class='delete-object' data-id="{{ domain.pk }}" data-name="{{ domain.name }}" href="{% url 'domain-delete' domain.pk %}">Delete</a></td>
+	</tr>
+{% endfor %}
+<tr>
+	<td colspan="11">
+		<div class="pagination">
+			<span class="step-links">
+				{% if domain_list.has_previous %}
+					<a href="?page=1">&laquo; first</a>
+					<a href="?page={{ domain_list.previous_page_number }}">previous</a>
+				{% endif %}
+
+				<span class="current">
+					Page {{ domain_list.number }} of {{ domain_list.paginator.num_pages }}.
+				</span>
+
+				{% if domain_list.has_next %}
+					<a href="?page={{ domain_list.next_page_number }}">next</a>
+					<a href="?page={{ domain_list.paginator.num_pages }}">last &raquo;</a>
+				{% endif %}
+			</span>
+		</div>
+	</td>
+</tr>

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+	Domain detail
+{% endblock title %}
+
+{% block head %}
+	{{ block.super }}
+	<link href="{% static 'css/bootstrap-datepicker3.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+{% endblock head %}
+
+
+{% block container %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="row text-center">
+						<h3>Info - {{ domain }}</h3>
+					</div>
+					<div class="panel-heading">
+						General
+						{% if domain %} |
+							<a href="{% url 'domain-logs' pk=domain.pk %}">Logs</a>
+						{% endif %}
+					</div>
+
+					<div class="panel panel-body">
+						<div class="row">
+							<div class="col-md-12">
+								<p><b>Domain name</b> - {{ domain.name }}</p>
+								<p><b>Company name</b> - {{ domain.company_name|default_if_none:'' }}</p>
+								<p><b>Company address</b> - {{ domain.company_address|default_if_none:'' }}</p>
+								<p>
+									<b>Telephone</b> - {{ domain.telephone|default_if_none:'' }}
+									{% if domain.telephone2 %}, {{ domain.telephone2 }}{% endif %}
+									{% if domain.telephone3 %}, {{ domain.telephone3 }}{% endif %}
+								</p>
+								<p><b>Date of domain registration</b> - {{ domain.date_register|date:'d.m.Y' }}</p>
+								<p><b>Date of domain expiration</b> - {{ domain.date_expire|date:'d.m.Y' }}</p>
+								<p><b>PCI DSS scan</b> - {{ domain.pci_scan_name|default_if_none:'' }}</p>
+								<p><b>The date of last scan</b> - {{ domain.date_last_scan|date:'d.m.Y' }}</p>
+								<p><b>Manager</b> - {{ domain.manager|default_if_none:'' }}</p>
+								<p><b>Admin of website</b> - {{ domain.admin|default_if_none:'' }}</p>
+								<h3><a href="{% url 'domain-edit' pk=domain.pk %}">Edit</a></h3>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock container %}
+
+{% block scripts %}
+	{{ block.super }}
+
+{#	<script type="text/javascript" src="{% static 'js/jquery-1.11.3.min.js' %}"></script>#}
+	<script type="text/javascript" src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+	<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+	<script>
+		$("#id_date_register, #id_date_expire, #id_date_last_scan").datepicker({
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			changeYear: true
+		});
+
+		$('.js-show-telephone').on('click', function () {
+			var show_block = $('.add-telephone:hidden');
+			var show = false;
+			show_block.each(function () {
+			    if (!show){
+			        $(this).removeClass('hidden');
+			        show = true
+				}
+            })
+        });
+
+
+		var domain_name = $('#id_name');
+		domain_name.autocomplete({
+			source: "{% url 'search-domain-name' %}",
+			minLength: 3,
+			appendTo: "#js-append-domain-name-res",
+			select: function(e, ui) {
+{#			FIXME: Select item not work #}
+			    this.value = ui.item.name
+			}
+		}).data('ui-autocomplete')._renderItem = function(ul, item) {
+			return $("<li>")
+				.attr("data-name", item.name)
+				.append(item.name)
+				.appendTo(ul);
+		};
+
+		domain_name.blur(function () {
+			if (this.value.length > 0) {
+			    var error = $('.js-error-name');
+			    $.ajax({
+			        url: "{% url 'domain-exists' %}",
+					data: {
+			            domain_name: this.value
+					},
+					success: function (data) {
+						if (data.exists){
+						    error.html('Domain exists!')
+						} else {
+                            error.html('')
+                        }
+                    }
+				})
+			}
+
+        });
+
+		$('.js-get-whois').on('click', function (){
+			var domain_name = $('#id_name').val();
+
+			if (domain_name.length == 0){
+			    alert('domain name is empty!');
+			    return false;
+			}
+			var loader = $('.js-loader');
+			var errors = $('.js-error-message');
+
+			$.ajax({
+				url: '{% url 'get-whois' %}',
+				data: {
+					domain_name: domain_name
+				},
+				beforeSend: function (){
+				    loader.removeClass('hidden');
+					errors.html()
+				},
+				success: function (data) {
+					$('#id_date_register').val(data.creation_date);
+					$('#id_date_expire').val(data.expiration_date);
+				},
+				error: function (data) {
+					errors.html('Fail - ' + data)
+                },
+				complete: function () {
+					loader.addClass('hidden')
+                }
+			});
+			return false;
+		});
+	</script>
+{% endblock %}

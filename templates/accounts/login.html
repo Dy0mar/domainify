@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load domains_tag %}
+
+{% block title %}
+	Login
+{% endblock title %}
+
+{% block register %}
+	{% if register_allow %}
+		{{ block.super }}
+	{% endif %}
+{% endblock %}
+
+
+
+{% block container %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				<div class="panel panel-default">
+						<div class="row text-center">
+							<h3>Login</h3>
+						</div>
+					<div class="panel panel-body">
+
+						<div class="row">
+							<form method="POST" action="." class="form-horizontal">
+								{% csrf_token %}
+								{% if form.errors %}
+									{% for field in form %}
+										{% for error in field.errors %}
+											<div class="alert alert-danger">
+												<strong>{{ error|escape }}</strong>
+											</div>
+										{% endfor %}
+									{% endfor %}
+									{% for error in form.non_field_errors %}
+										<div class="alert alert-danger">
+											<strong>{{ error|escape }}</strong>
+										</div>
+									{% endfor %}
+								{% endif %}
+								<div class="form-group">
+									<label for="username" class="col-md-4 control-label">Username</label>
+									<div class="col-md-4">
+										{{ form.username }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="password" class="col-md-4 control-label">Password</label>
+									<div class="col-md-4">
+										{{ form.password }}
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-md-8 col-md-offset-4">
+										<button type="submit" class="btn btn-primary">Login</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock container %}

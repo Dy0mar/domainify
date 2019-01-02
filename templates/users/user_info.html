@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+	User info
+{% endblock title %}
+
+{% block container %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="row text-center">
+						<h3>User Info</h3>
+					</div>
+
+					<div class="panel panel-body">
+
+						<div class="row">
+							<div class="col-lg-4">Date created</div>
+							<div class="col-lg-4">Name</div>
+							<div class="col-lg-4">Status</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-4">{{ user.date_joined|date:'Y-m-d H:s' }}</div>
+							<div class="col-lg-4">{{ user.username }}</div>
+							<div class="col-lg-4">
+								{% if user.is_superuser %}
+									admin
+								{% elif user.is_staff %}
+									manager
+								{% else %}
+									guest
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock container %}

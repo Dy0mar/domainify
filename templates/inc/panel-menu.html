@@ -1,0 +1,16 @@
+<div class="panel-heading">
+    <div class="row">
+		<div class="col-xs-1"></div>
+        <ul class="list-inline">
+			{% if user.is_authenticated %}
+				{% if user.is_superuser %}
+					<li><a href="#">Add Domain</a></li>
+				{% endif %}
+				<li><a href="#">Reminders</a></li>
+			{% else %}
+				<li><a class="icon-bar" href="{% url 'login' %}">Login</a></li>
+				<li><a class="icon-bar" href="{% url 'register' %}">Register</a></li>
+			{% endif %}
+        </ul>
+    </div>
+</div>

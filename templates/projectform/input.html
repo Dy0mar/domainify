@@ -1,0 +1,17 @@
+{% load widget_tweaks %}
+
+<section>
+	{% if label %}
+		<label class="label">{{ label }}</label>
+	{% endif %}
+	<label class="input {% if field.errors %}state-error{% endif %}">
+		{% if icon %}<i class="icon-append fa fa-{{ icon }}"></i>{% endif %}
+		{% if placeholder %}
+			{% render_field field placeholder=placeholder class+=class %}
+		{% else %}
+			{% render_field field placeholder=field.label class+=class %}
+		{% endif %}
+		{% if not hide_tooltip %}<b class="tooltip tooltip-{{ tooltip_position|default:'bottom-right' }}">{% if tooltip %}{{ tooltip }}{% else %}{{ field.help_text|default:'label' }}{% endif %}</b>{% endif %}
+	</label>
+	{% if field.errors %}<em for="id_{{ field.name }}" class="note note-error">{{ field.errors|striptags }}</em>{% endif %}
+</section>

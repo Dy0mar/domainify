@@ -1,0 +1,91 @@
+.thead-light{
+    background-color: #fafafa;
+}
+.mydropdown{
+    position: relative;
+}
+.mydropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 160px;
+    padding: 10px 15px;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 14px;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid #0003;
+    border-radius: 4px;
+    box-shadow: 0 6px 12px #0003;
+    background-clip: padding-box;
+}
+.mydropdown.active .mydropdown-menu{
+    display: block;
+}
+.mydropdown-menu ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#id-domains-form .table > thead > tr > th{
+    vertical-align: middle;
+}
+#id-domains-form .open > .mydropdown-menu{
+    width: auto;
+    max-width: 500px;
+    min-width: 250px;
+}
+#app .container{
+    width: auto;
+}
+#app .navbar-fixed-top{
+    position: sticky;
+    -webkit-box-shadow:  0 0 15px #000;
+    -moz-box-shadow:  0 0 15px #000;
+    box-shadow:  0 0 15px #000;
+}
+.navbar-inverse .navbar-nav > li > a:focus,
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav .current-page{
+    background-color: #333333;
+}
+.ui-autocomplete{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 5px 5px #ccc;
+    -moz-box-shadow: 0 5px 5px #ccc;
+    box-shadow: 0 5px 5px #ccc;
+}
+.ui-autocomplete .ui-menu-item{
+    padding: 10px 15px;
+}
+.ui-autocomplete .ui-menu-item:hover{
+    background-color: #f0f0f0;
+}
+.ui-selectmenu-open{
+    z-index: 1000;
+}
+.ui-selectmenu-text{
+    line-height:1.65em;
+}
+.ui-selectmenu-icon.ui-icon{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid\9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    margin-top: 0.75em;
+}
+.form-error{
+    font-style: italic;
+    text-align: right;
+    color: #cc0000;
+}

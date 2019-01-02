@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+	Domain {% if domain %}Edit{% else %}Add{% endif %}
+{% endblock title %}
+
+{% block head %}
+	{{ block.super }}
+	<link href="{% static 'css/bootstrap-datepicker3.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+{% endblock head %}
+
+
+{% block container %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="row text-center">
+						<h3>{% if domain %}Edit{% else %}Add{% endif %} domain</h3>
+					</div>
+					<div class="panel-heading">
+						{% if domain %}
+							<a href="{% url 'domain-detail' pk=domain.pk %}">General</a>
+						 	|
+							<a href="{% url 'domain-logs' pk=domain.pk %}">Logs</a>
+						{% endif %}
+					</div>
+
+					<div class="panel panel-body">
+						{% if form.errors %}
+							{% for field in form %}
+								{% for error in field.errors %}
+									<div class="alert alert-danger">
+										<strong>{{ error|escape }}</strong>
+									</div>
+								{% endfor %}
+							{% endfor %}
+							{% for error in form.non_field_errors %}
+								<div class="alert alert-danger">
+									<strong>{{ error|escape }}</strong>
+								</div>
+							{% endfor %}
+						{% endif %}
+
+						<div class="row">
+							<form method="POST" action="." class="form-horizontal">
+								{% csrf_token %}
+								<div class="form-group">
+									<label for="id_name" class="col-md-4 control-label">Name:</label>
+									<div class="col-md-4">
+										{{ form.name }}
+										<div class="js-error-name form-error" style="display: none;"></div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="id_company_name" class="col-md-4 control-label">Company name:</label>
+									<div class="col-md-4">
+{#										TODO: Add autocomplete#}
+										{{ form.company_name }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="id_company_address" class="col-md-4 control-label">Company address:</label>
+									<div class="col-md-4">
+										{{ form.company_address }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="id_telephone" class="col-md-4 control-label">Telephone:</label>
+									<div class="col-md-4">
+										{{ form.telephone }}
+									</div>
+									<div class="col-md-2">
+										<a href="#" class="btn btn-success js-show-telephone">Add telephone</a>
+									</div>
+								</div>
+								<div class="form-group add-telephone {% if not form.telephone2.value %}hidden{% endif %}">
+									<label for="id_telephone2" class="col-md-4 control-label">Telephone 2:</label>
+									<div class="col-md-4">
+										{{ form.telephone2 }}
+									</div>
+								</div>
+								<div class="form-group add-telephone {% if not form.telephone3.value %}hidden{% endif %}">
+									<label for="id_telephone3" class="col-md-4 control-label">Telephone 3:</label>
+									<div class="col-md-4">
+										{{ form.telephone3 }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="id_date_register" class="col-md-4 control-label">Date of domain registrations:</label>
+									<div class="col-md-4">
+										{{ form.date_register }}
+									</div>
+									<div class="col-md-2">
+										<a href="#" class="btn btn-success js-get-whois">Set current whois date</a>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="id_date_expire" class="col-md-4 control-label">Date of domain expiration:</label>
+									<div class="col-md-4">
+										{{ form.date_expire }}
+									</div>
+									<div class="col-md-2">
+										<div class="js-loader hidden"><i class="fa fa-spinner fa-spin fa-2x fa-fw margin-bottom"></i></div>
+										<div class="js-error-message text-danger"></div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="id_manager" class="col-md-4 control-label">Manager</label>
+									<div class="col-md-4">
+										{{ form.manager }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="id_admin" class="col-md-4 control-label">Admin:</label>
+									<div class="col-md-4">
+										{{ form.admin }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="id_pci_scan" class="col-md-4 control-label">PCI Scan Name:</label>
+									<div class="col-md-4">
+										{{ form.pci_scan_name }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="id_date_last_scan" class="col-md-4 control-label">Date of last scan:</label>
+									<div class="col-md-4">
+										{{ form.date_last_scan }}
+									</div>
+									<div class="col-md-2">
+										<div class="js-loader hidden"><i class="fa fa-spinner fa-spin fa-2x fa-fw margin-bottom"></i></div>
+										<div class="js-error-message text-danger"></div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="id_status" class="col-md-4 control-label">status:</label>
+									<div class="col-md-4">
+										{{ form.status }}
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-md-8 col-md-offset-4">
+										<button type="submit" class="btn btn-primary">Save</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock container %}
+
+{% block scripts %}
+	{{ block.super }}
+
+{#	<script type="text/javascript" src="{% static 'js/jquery-1.11.3.min.js' %}"></script>#}
+{#	<script type="text/javascript" src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>#}
+	<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+	<script>
+
+		$('.js-show-telephone').on('click', function () {
+			var show_block = $('.add-telephone:hidden');
+			var show = false;
+			show_block.each(function () {
+			    if (!show){
+			        $(this).removeClass('hidden');
+			        show = true
+				}
+            })
+        });
+
+
+		var domain_name = $('#id_name');
+		domain_name.autocomplete({
+			source: "{% url 'search-domain-name' %}",
+			minLength: 3,
+			appendTo: "#js-append-domain-name-res",
+			select: function(e, ui) {
+			    e.preventDefault();
+			    this.value = ui.item.name;
+			}
+		}).data('ui-autocomplete')._renderItem = function(ul, item) {
+			return $("<li>")
+				.data("name", item.name)
+				.append(item.name)
+				.appendTo(ul);
+		};
+
+		domain_name.blur(function () {
+			if (this.value.length > 0) {
+			    var error = $('.js-error-name');
+			    var _this = this;
+			    $.ajax({
+			        url: "{% url 'domain-exists' %}",
+					data: {
+			            domain_name: this.value
+					},
+					success: function (data) {
+						if (data.exists){
+						    error.html('Domain exists!').show();
+						    _this.invalid = true;
+						} else {
+                            error.html('').hide();
+                            _this.invalid = false;
+                        }
+                    }
+				})
+			}
+
+        });
+
+		$('.js-get-whois').on('click', function (){
+			var domain_name = $('#id_name').val();
+
+			if (domain_name.length == 0){
+			    alert('domain name is empty!');
+			    return false;
+			}
+			var loader = $('.js-loader');
+			var errors = $('.js-error-message');
+
+			$.ajax({
+				url: '{% url 'get-whois' %}',
+				data: {
+					domain_name: domain_name
+				},
+				beforeSend: function (){
+				    loader.removeClass('hidden');
+					errors.html()
+				},
+				success: function (data) {
+					$('#id_date_register').val(data.creation_date);
+					$('#id_date_expire').val(data.expiration_date);
+				},
+				error: function (data) {
+					errors.html('Fail - ' + data)
+                },
+				complete: function () {
+					loader.addClass('hidden')
+                }
+			});
+			return false;
+		});
+	</script>
+{% endblock %}

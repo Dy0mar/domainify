@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	User list
+{% endblock title %}
+
+{% block head %}
+	{{ block.super }}
+	<link href="{% static 'css/toogle.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block content %}
+<div class="col-md-12">
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead class="thead-light">
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Username</th>
+					<th scope="col">E-mail</th>
+					<th scope="col">Created</th>
+					<th scope="col">Active</th>
+					<th scope="col">Manager</th>
+					<th scope="col">Admin</th>
+					<th scope="col">Action</th>
+				</tr>
+			</thead>
+		{% for user in user_list %}
+			<tr>
+				<td>{{ forloop.counter }}</td>
+				<td>{{ user.username }}</td>
+				<td>{{ user.email }}</td>
+				<td>{{ user.date_joined|date:"d.m.Y" }}</td>
+				<td>
+					<label class="switch">
+					  <input type="checkbox"
+							  {% if user.is_active %} checked="checked"{% endif %}
+							  {% if user == request.user %} disabled{% endif %}
+					  >
+					  <span data-name="is_active" data-id="{{ user.id }}" class="slider round"></span>
+					</label>
+				</td>
+				<td>
+					<label class="switch">
+					  <input type="checkbox"
+							  {% if user.is_staff %} checked="checked"{% endif %}
+					  >
+					  <span data-name="is_staff" data-id="{{ user.id }}" class="slider round"></span>
+					</label>
+				</td>
+				<td>
+					<label class="switch">
+					  <input type="checkbox"
+							  {% if user.is_superuser %} checked="checked"{% endif %}
+							  {% if user == request.user %} disabled{% endif %}
+					  >
+					  <span data-name="is_superuser" data-id="{{ user.id }}" class="slider round"></span>
+					</label>
+				</td>
+				<td>
+					<a href="{% url 'user-edit' user.id %}">Edit</a> /
+					<a class='delete-object' data-id="{{ user.id }}" data-name="{{ user.username }}" href="{% url 'user-delete' user.id %}">Delete</a>
+				</td>
+			</tr>
+		{% endfor %}
+		</table>
+	</div>
+<div class="pull-right"><a href="{% url 'user-add' %}">Add User</a></div>
+</div>
+{% endblock content %}
+{% block scripts %}
+	{{ block.super }}
+	<script>
+	$(function() {
+		$('.slider').on('click', function () {
+			var url = '{% url 'change-user-status' %}';
+			$.ajax({
+				url: url,
+				data: {
+				    name: this.dataset.name,
+				    id: this.dataset.id
+				}
+			});
+        });
+
+		$(document).on('click', '.delete-object', function (){
+			var name = this.dataset.name;
+			var url = this.href;
+			var r = confirm("Delete this?\n" + name);
+			if (r === true) {
+				$.ajax({
+					url: url,
+					data: {
+						name: name,
+						id: this.dataset.id
+					},
+					success: function () {
+						window.location.reload();
+					}
+				});
+			}
+			return false;
+		})
+
+	});
+	</script>
+{% endblock scripts %}

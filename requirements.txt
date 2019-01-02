@@ -1,0 +1,5 @@
+Django==2.0.7
+mysqlclient==1.3.13
+django-widget-tweaks==1.3
+jsonfield==2.0.2
+python-whois==0.7

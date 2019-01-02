@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	Domain list
+{% endblock title %}
+
+{% block head %}
+	{{ block.super }}
+	<link href="{% static 'css/bootstrap-datepicker3.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block content %}
+	<div class="table-responsive" style="min-height: 200px">
+		<form method="POST" action="." id="id-domains-form" class="form-horizontal">
+			<table class="table table-hover">
+				<thead class="thead-light">
+					<tr>
+						<th scope="col">
+							<div class="mydropdown show">
+								<a class="btn btn-secondary mydropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Site name <span class="caret"></span>
+								</a>
+								<div class="mydropdown-menu">
+									<section id="js-append-name-res" class="autocomplete-wr">
+										<div class="input-group">
+											<input id="js-search-domain-name" class="ui-autocomplete-input form-control" value="" type="text" placeholder="Поиск">
+											<div class="input-group-btn">
+												<button data-name="domain-name" class="js-apply-filter-search btn btn-primary mydropdown-toggle">Apply</button>
+											</div>
+										</div>
+									</section>
+								</div>
+							</div>
+						</th>
+						<th scope="col">
+							<div class="mydropdown show">
+								<a class="btn btn-secondary mydropdown-toggle" href="#" role="button" data-toggle="mydropdown" aria-haspopup="true" aria-expanded="false">
+								Manager <span class="caret"></span>
+								</a>
+								<div class="mydropdown-menu">
+									<label for="id_managers">
+									{{ form.managers }}
+									</label>
+									<button class="js-apply-filter btn btn-primary mydropdown-toggle">Apply</button>
+								</div>
+							</div>
+						</th>
+						<th scope="col">
+							<div class="mydropdown show">
+								<a class="btn btn-secondary mydropdown-toggle" href="#" role="button" data-toggle="mydropdown" aria-haspopup="true" aria-expanded="false">
+								Admin <span class="caret"></span>
+								</a>
+								<div class="mydropdown-menu">
+									<label for="id_managers">
+										{{ form.admins }}
+									</label>
+									<button class="js-apply-filter btn btn-primary mydropdown-toggle">Apply</button>
+								</div>
+							</div>
+						</th>
+						<th scope="col">
+							<div class="mydropdown show">
+								<a class="btn btn-secondary mydropdown-toggle" href="#" role="button" data-toggle="mydropdown" aria-haspopup="true" aria-expanded="false">
+								Company name <span class="caret"></span>
+								</a>
+								<div class="mydropdown-menu">
+									<section id="js-append-company-name-res" class="autocomplete-wr">
+										<div class="input-group">
+											<input id="js-search-company-name" class="ui-autocomplete-input form-control" value="" type="text" placeholder="Поиск">
+											<div class="input-group-btn">
+												<button data-name="company-name" class="js-apply-filter-search btn btn-primary mydropdown-toggle">Apply</button>
+											</div>
+										</div>
+									</section>
+								</div>
+							</div>
+						</th>
+						<th scope="col">
+							<div class="mydropdown show">
+								<a class="btn btn-secondary mydropdown-toggle" href="#" role="button" data-toggle="mydropdown" aria-haspopup="true" aria-expanded="false">
+								Telephone <span class="caret"></span>
+								</a>
+								<div class="mydropdown-menu">
+									<section id="js-append-telephone-res" class="autocomplete-wr">
+										<div class="input-group">
+											<input id="js-search-telephone" class="ui-autocomplete-input form-control" value="" type="text" placeholder="Поиск">
+											<div class="input-group-btn">
+												<button data-name="telephone" class="js-apply-filter-search btn btn-primary mydropdown-toggle">Apply</button>
+											</div>
+										</div>
+									</section>
+								</div>
+							</div>
+						</th>
+						<th scope="col">
+							<div class="mydropdown show">
+								<a class="btn btn-secondary mydropdown-toggle" href="#" role="button" data-toggle="mydropdown" aria-haspopup="true" aria-expanded="false">
+								Registration <span class="caret"></span>
+								</a>
+								<div class="mydropdown-menu">
+									<div class="input-group">
+										{{ form.date_register_from }}
+										{{ form.date_register_till }}
+										<div class="input-group-btn">
+											<button class="js-apply-filter btn btn-primary mydropdown-toggle">Apply</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</th>
+						<th scope="col">
+							<div class="mydropdown show">
+								<a class="btn btn-secondary mydropdown-toggle" href="#" role="button" data-toggle="mydropdown" aria-haspopup="true" aria-expanded="false">
+								Expiration <span class="caret"></span>
+								</a>
+								<div class="mydropdown-menu">
+									<div class="input-group">
+										{{ form.date_expire_from }}
+										{{ form.date_expire_till }}
+										<div class="input-group-btn">
+											<button class="js-apply-filter btn btn-primary mydropdown-toggle">Apply</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</th>
+						<th scope="col">
+							<div class="mydropdown show">
+								<a class="btn btn-secondary mydropdown-toggle" href="#" role="button" data-toggle="mydropdown" aria-haspopup="true" aria-expanded="false">
+								Date of <br> Request <span class="caret"></span>
+								</a>
+								<div class="mydropdown-menu">
+									<div class="input-group">
+										{{ form.date_request }}
+										<div class="input-group-btn">
+											<button class="js-apply-filter btn btn-primary mydropdown-toggle">Apply</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</th>
+						<th scope="col">
+							<div class="mydropdown show">
+								<a class="btn btn-secondary mydropdown-toggle" href="#" role="button" data-toggle="mydropdown" aria-haspopup="true" aria-expanded="false">
+								PCI<br> dss scan <span class="caret"></span>
+								</a>
+								<div class="mydropdown-menu">
+									<label for="pci_scan" class="input-group">
+										{{ form.pci_scan }}
+										<div class="input-group-btn">
+											<button class="js-apply-filter btn btn-primary mydropdown-toggle">Apply</button>
+										</div>
+									</label>
+								</div>
+							</div>
+						</th>
+						<th scope="col">
+							<div class="mydropdown show">
+								<a class="btn btn-secondary mydropdown-toggle" href="#" role="button" data-toggle="mydropdown" aria-haspopup="true" aria-expanded="false">
+								Status <span class="caret"></span>
+								</a>
+								<div class="mydropdown-menu">
+									<label for="status" class="input-group">
+										{{ form.status }}
+										<div class="input-group-btn">
+											<button class="js-apply-filter btn btn-primary mydropdown-toggle">Apply</button>
+										</div>
+									</label>
+								</div>
+							</div>
+						</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				<tbody id="js-result-data">
+					{% include 'domains/inc/table.html' %}
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+	<script>
+		$('.js-apply-filter').on('click', function (){
+			makeRequest();
+			return false;
+		});
+
+		$('.js-apply-filter-search').on('click', function (){
+		    var name = this.dataset.name;
+			var data = name + '=' + $('#js-search-'+name).val();
+			makeRequest(data);
+			return false;
+		});
+
+		function makeRequest(getData, clear) {
+			var form = $('#id-domains-form');
+			var results = $('#js-result-data');
+
+			results.html('');
+
+			var data = form.serialize();
+			if (getData !== undefined)
+			    if (clear===true)
+			        data = getData;
+				else
+					data = data + '&' + getData;
+			$.ajax({
+				type: 'GET',
+				url: form.attr('action'),
+				data: data,
+				success: function (data) {
+					results.html(data);
+				}
+			});
+		}
+
+		$(document).on('click', '.delete-object', function (){
+			var name = this.dataset.name;
+			var url = this.href;
+			var r = confirm("Delete this?\n" + name);
+			if (r === true) {
+				$.ajax({
+					url: url,
+					data: {
+						name: name,
+						id: this.dataset.id
+					},
+					success: function () {
+						window.location.reload();
+					}
+				});
+			}
+			return false;
+		});
+
+		var autocomplete_cname = $('#js-append-company-name-res');
+		$('#js-search-company-name').autocomplete({
+			source: "{% url 'search-company-name' %}",
+			appendTo: "#js-append-company-name-res",
+			minLength: 3,
+			open: function(event, ui) {
+				autocomplete_cname.addClass('autocomplete-open');
+			},
+			close: function(event, ui) {
+				autocomplete_cname.removeClass('autocomplete-open');
+			},
+			select: function(e, ui) {
+				var data = 'company-name=' + ui.item.name;
+				makeRequest(data, true);
+			}
+		}).data('ui-autocomplete')._renderItem = function(ul, item) {
+			return $("<li>")
+				.attr("data-id", item.name)
+				.append(item.name)
+				.appendTo(ul);
+		};
+
+		var autocomplete_name = $('#js-append-name-res');
+		$('#js-search-domain-name').autocomplete({
+			source: "{% url 'search-domain-name' %}",
+			appendTo: "#js-append-name-res",
+			minLength: 3,
+			open: function(event, ui) {
+				autocomplete_name.addClass('autocomplete-open');
+			},
+			close: function(event, ui) {
+				autocomplete_name.removeClass('autocomplete-open');
+			},
+			select: function(e, ui) {
+				var data = 'domain-name=' + ui.item.name;
+				makeRequest(data, true);
+			}
+		}).data('ui-autocomplete')._renderItem = function(ul, item) {
+			return $("<li>")
+				.attr("data-name", item.name)
+				.append(item.name)
+				.appendTo(ul);
+		};
+
+		var autocomplete_telephone = $('#js-append-telephone-res');
+		$('#js-search-telephone').autocomplete({
+			source: "{% url 'search-telephone' %}",
+			appendTo: "#js-append-telephone-res",
+			minLength: 3,
+			open: function(event, ui) {
+				autocomplete_telephone.addClass('autocomplete-open');
+			},
+			close: function(event, ui) {
+				autocomplete_telephone.removeClass('autocomplete-open');
+			},
+			select: function(e, ui) {
+				var data = 'telephone=' + ui.item.name;
+				makeRequest(data, true);
+			}
+		}).data('ui-autocomplete')._renderItem = function(ul, item) {
+			return $("<li>")
+				.attr("data-telephone", item.name)
+				.append(item.name)
+				.appendTo(ul);
+		};
+
+		$('#id_pci_scan').on('click', function () {
+			return false
+        });
+		$('#id_status').on('click', function () {
+			return false
+        });
+
+//        $('.dropdown-menu').on('click',function(ev){
+//            ev.stopPropagation();
+//        });
+	</script>
+{% endblock %}

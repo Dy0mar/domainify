@@ -1,0 +1,14 @@
+{% load widget_tweaks %}
+
+{% if label %}
+	<label class="label">{{ label }}</label>
+{% endif %}
+<label class="textarea{% if class %} {{ class }}{% endif %}{% if field.errors %} error{% endif %}">
+	{% if placeholder %}
+		{% render_field field placeholder=placeholder class+=class %}
+	{% else	%}
+		{% render_field field placeholder=field.label class+=class %}
+	{% endif %}
+	{% if field.errors %}<em class="error__bl">{{ field.errors|striptags }}</em>{% endif %}
+</label>
+

@@ -1,0 +1,22 @@
+{% load widget_tweaks %}
+
+{% if label %}
+	<div class="input{% if class %} {{ class }}{% endif %}{% if field.errors %} error{% endif %}">
+		<label class="label{% if label_class %} {{ label_class }}{% endif %}" for="id_{% if form.prefix %}{{ form.prefix }}-{{ form.id }}{% endif %}{{ field.name }}">{{ label }}{% if not hide_errors and field.errors %} ({{ field.errors|striptags }}){% endif %}</label>
+		{% if placeholder %}
+			{% render_field field placeholder=placeholder %}
+		{% else %}
+			{% render_field field placeholder=field.label %}
+		{% endif %}		
+	</div>
+{% else %}
+	<label class="input{% if class %} {{ class }}{% endif %}{% if field.errors %} error{% endif %}">
+		{% if not hide_errors and field.errors %}<div class="error__bl">{{ field.errors|striptags }}</div>{% endif %}
+		{% if placeholder %}
+			{% render_field field placeholder=placeholder %}
+		{% else %}
+			{% render_field field placeholder=field.label %}
+		{% endif %}	
+	</label>
+{% endif %}
+

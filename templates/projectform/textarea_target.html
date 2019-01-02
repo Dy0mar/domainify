@@ -1,0 +1,10 @@
+{% load widget_tweaks %}
+
+{% if field.errors %}<div class="error">{% endif %}
+	<label class="textarea textarea_target">
+		{% render_field field|attr:'rows:5'|attr:'value:'|attr:"onkeyup:this.setAttribute('value', this.value)" %}
+		<span class="label">{% if label %}{{ label }}{% else %}{{ field.label }}{% endif %}</span>
+	</label>
+	{% if field.errors %}<em class="error__bl error__bl_fz10">{{ field.errors|striptags }}</em>{% endif %}
+{% if field.errors %}</div>{% endif %}
+

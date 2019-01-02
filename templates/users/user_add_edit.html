@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}
+	User {% if form.instance.pk %}Edit{% else %}Add{% endif %}
+{% endblock title %}
+
+{% block container %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="row text-center">
+						<h3>{% if form.instance.pk %} Edit{% else %}Add{% endif %} user</h3>
+					</div>
+
+					<div class="panel panel-body">
+						{% if form.errors %}
+							{% for field in form %}
+								{% for error in field.errors %}
+									<div class="alert alert-danger">
+										<strong>{{ error|escape }}</strong>
+									</div>
+								{% endfor %}
+							{% endfor %}
+							{% for error in form.non_field_errors %}
+								<div class="alert alert-danger">
+									<strong>{{ error|escape }}</strong>
+								</div>
+							{% endfor %}
+						{% endif %}
+
+						<div class="row">
+							<form method="POST" action="." class="form-horizontal">
+								{% csrf_token %}
+								<div class="form-group">
+									<label for="username" class="col-md-4 control-label">Username:</label>
+									<div class="col-md-4">
+										{{ form.username }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="email" class="col-md-4 control-label">E-mail:</label>
+									<div class="col-md-4">
+										{{ form.email }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="password1" class="col-md-4 control-label">Password:</label>
+									<div class="col-md-4">
+										{{ form.password1 }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="password2" class="col-md-4 control-label">Password confirmation:</label>
+									<div class="col-md-4">
+										{{ form.password2 }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="is_staff" class="col-md-4 control-label">Is manager:</label>
+									<div class="col-md-4">
+										{{ form.is_staff }}
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="is_staff" class="col-md-4 control-label">Is admin:</label>
+									<div class="col-md-4">
+										{{ form.is_staff }}
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-md-8 col-md-offset-4">
+										<button type="submit" class="btn btn-primary">Save</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock container %}

@@ -1,0 +1,12 @@
+{% load widget_tweaks %}
+{% if field.errors %}<div class="error">{% endif %}
+	<label class="input input-file{% if input_class %} {{ input_class }}{% endif %}{% if field.errors %} mb0{% endif %}" for="id_{{ field.name }}">
+		<div class="btn btn_fill-white{% if btn_class %} {{ btn_class }}{% endif %}">
+			<input type="file" name="{{ field.name }}" id="id_{{ field.name }}" onchange="this.parentNode.nextSibling.value = this.value.replace('C:\\fakepath\\', '');" />
+			<i class="icon clip"></i>
+			Загрузить
+		</div><input placeholder="Прикрепить файл (необязательно)" type="text" readonly />
+	</label>
+	{% if field.help_text %}<small class="fz12 warm-grey">{{ field.help_text }}</small>{% endif %}
+	{% if field.errors %}<em class="error__bl">{{ field.errors|striptags }}</em>{% endif %}
+{% if field.errors %}</div>{% endif %}

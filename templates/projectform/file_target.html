@@ -1,0 +1,9 @@
+ {% load widget_tweaks %}
+{% if field.errors %}<div class="error error_absolute">{% endif %}
+	<label class="input input-target-file{% if input_class %} {{ input_class }}{% endif %}{% if field.errors %} mb0{% endif %}" for="id_{{ field.name }}">		
+		<span class="input input_target{% if class %} {{ class }}{% endif %}"><input type="text" value="{{ value }}" readonly />
+			<span class="label">{% if label %}{{ label }}{% else %}{{ field.label }}{% endif %}</span>
+		</span><span class="btn"><input type="file" name="{{ field.name }}" id="id_{{ field.name }}" onchange="this.parentNode.previousSibling.firstChild.setAttribute('value', this.value.replace('C:\\fakepath\\', ''))" /></span>
+	</label>
+	{% if field.errors %}<em class="error__bl">{{ field.errors|striptags }}</em>{% endif %}
+{% if field.errors %}</div>{% endif %}
