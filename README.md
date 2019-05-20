@@ -11,12 +11,3 @@ domainify/settings.py
 
 Включить или отключить регистрацию 
 REGISTRATION_ALLOW = True/False
-
-Обновление проекта из репозитория
-hg pull && hg up
-
-Текущая ветка
-hg branch
-
-Новая ветка
-hg branch 'branch_name'
