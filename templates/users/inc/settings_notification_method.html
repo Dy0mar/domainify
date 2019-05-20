@@ -1,0 +1,31 @@
+<div class="row">
+    <table class="table table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Method</th>
+                <th scope="col">Off/On</th>
+                <th scope="col">Check</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>email</td>
+            <td>
+                <label class="switch">
+                  <input type="checkbox" {% if settings.email %} checked="checked" {% endif %}>
+                  <span data-name="notification-method-email" class="slider round"></span>
+                </label>
+            </td>
+            <td><button type="button" class="btn btn-success check_notification" data-check-method="email">Check</button></td>
+        </tr>
+        <tr>
+            <td>pidgin</td>
+            <td>
+                <label class="switch">
+                  <input type="checkbox" {% if settings.pidgin %} checked="checked" {% endif %}>
+                  <span data-name="notification-method-pidgin" class="slider round"></span>
+                </label>
+            <td><button type="button" class="btn btn-success check_notification" data-check-method="pidgin">Check</button></td>
+            </td>
+        </tr>
+    </table>
+</div>

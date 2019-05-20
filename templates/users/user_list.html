@@ -19,6 +19,7 @@
 					<th scope="col">#</th>
 					<th scope="col">Username</th>
 					<th scope="col">E-mail</th>
+					<th scope="col">Pidgin</th>
 					<th scope="col">Created</th>
 					<th scope="col">Active</th>
 					<th scope="col">Manager</th>
@@ -31,6 +32,7 @@
 				<td>{{ forloop.counter }}</td>
 				<td>{{ user.username }}</td>
 				<td>{{ user.email }}</td>
+                <td>{{ user.pidgin }}</td>
 				<td>{{ user.date_joined|date:"d.m.Y" }}</td>
 				<td>
 					<label class="switch">
@@ -59,7 +61,7 @@
 					</label>
 				</td>
 				<td>
-					<a href="{% url 'user-edit' user.id %}">Edit</a> /
+					<a href="{% url 'user-edit' user.id %}?next_url={{ next_url }}">Edit</a> /
 					<a class='delete-object' data-id="{{ user.id }}" data-name="{{ user.username }}" href="{% url 'user-delete' user.id %}">Delete</a>
 				</td>
 			</tr>
@@ -80,7 +82,12 @@
 				data: {
 				    name: this.dataset.name,
 				    id: this.dataset.id
-				}
+				},
+				success: function (data) {
+                    if (data.msg !== undefined){
+                        alert(data.msg)
+                    }
+                }
 			});
         });
 
@@ -95,8 +102,10 @@
 						name: name,
 						id: this.dataset.id
 					},
-					success: function () {
-						window.location.reload();
+					success: function (data) {
+					    if (data.msg !== undefined)
+					        alert(data.msg);
+					    window.location.reload();
 					}
 				});
 			}

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+	User info
+{% endblock title %}
+
+{% block head %}
+	{{ block.super }}
+	<link href="{% static 'css/toogle.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block container %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="row text-center">
+						<h3>User Info</h3>
+					</div>
+
+					<div class="panel panel-body">
+
+						<div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">E-mail</th>
+                                        <th scope="col">Pidgin</th>
+                                        <th scope="col">Created</th>
+                                        <th scope="col">Active</th>
+                                        <th scope="col">Manager</th>
+                                        <th scope="col">Admin</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tr>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.pidgin }}</td>
+                                    <td>{{ user.date_joined|date:"d.m.Y" }}</td>
+                                    <td>{{ user.is_active|yesno }}</td>
+                                    <td>
+                                        {% if user.is_superuser %}
+                                            <label class="switch">
+                                              <input type="checkbox"
+                                                      {% if user.is_staff %} checked="checked"{% endif %}
+                                              >
+                                              <span data-name="is_staff" data-id="{{ user.id }}" class="slider round"></span>
+                                            </label>
+                                        {% else %}
+                                            {{ user.is_staff|yesno }}
+                                        {% endif %}
+
+                                    </td>
+                                    <td>{{ user.is_superuser|yesno }}</td>
+                                    <td>
+                                        <a href="{% url 'user-edit' user.id %}">Edit</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+					</div>
+                    {% if user.is_staff_or_admin %}
+
+                        <div class="panel panel-body">
+                            <div class="row text-center">
+                                <h3>Settings</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 table-bordered">
+                                    <div class="row text-center">
+                                        <b>Notifications</b> - получать уведомления приходящие
+                                    </div>
+                                    {% if user.is_superuser %}
+                                        {% include 'users/inc/settings_notification_users.html' with users_list=admin_list %}
+                                    {% elif user.is_staff %}
+                                        {% include 'users/inc/settings_notification_users.html' with users_list=manager_list %}
+                                    {% endif %}
+
+                                </div>
+                                <div class="col-lg-3 table-bordered">
+                                    <div class="row text-center">
+                                        <b>Метод получения уведомлений</b>
+                                    </div>
+                                    {% include 'users/inc/settings_notification_method.html' %}
+                                </div>
+                                <div class="col-lg-3">
+                                    <p>Вы входитe в группы:</p>
+                                    <p>Регистратор доменных имен - {{ domain_registrar|yesno }}</p>
+                                    <p>Редактор сайтов - {{ editor_site|yesno }}</p>
+                                    <p>Alexa Traffic - {{ alexa_traffic|yesno }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock container %}
+{% block scripts %}
+	{{ block.super }}
+	<script>
+	$(function() {
+
+	    function makeRequest(url, data){
+	        if (data && url){
+	            $.ajax({
+                    url: url,
+                    data: data,
+                    success: function (data) {
+                        if (data.msg !== undefined){
+                            alert(data.msg)
+                        }
+                    }
+                });
+            }
+        }
+
+        $('.check_notification').on('click', function () {
+            var url = '{% url 'check-notification-method' %}';
+		    var data = {check_method: this.dataset.checkMethod};
+            makeRequest(url, data)
+        });
+
+		$('.slider').on('click', function () {
+		    var url;
+		    var data;
+
+
+		    if (this.dataset.name === 'notification'){
+		        url = '{% url 'change-notification-list' %}';
+		        data = {id: this.dataset.id}
+            }
+
+		    if (this.dataset.name === 'notification-method-email'){
+		        url = '{% url 'change-notification-method' %}';
+		        data = {name: 'email'}
+            }
+		    if (this.dataset.name === 'notification-method-pidgin'){
+		        url = '{% url 'change-notification-method' %}';
+		        data = {name: 'pidgin'}
+            }
+		    if (this.dataset.name === 'is_staff'){
+		        url = '{% url 'change-user-status' %}';
+		        data = {
+				    name: this.dataset.name,
+				    id: this.dataset.id
+				}
+            }
+
+            makeRequest(url, data);
+        });
+	});
+	</script>
+{% endblock scripts %}

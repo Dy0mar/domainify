@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.urls import path
-from django.urls import re_path
+from django.urls import path, re_path
 
 from domains import views
 
@@ -31,6 +30,11 @@ urlpatterns = [
         r'^domain-delete/(?P<pk>\d+)/$',
         views.domain_delete,
         name='domain-delete'
+    ),
+    re_path(
+        r'^domain-to-image/(?P<pk>\d+)/$',
+        views.domain_to_image,
+        name='domain-to-image'
     ),
     path(
         'search-domain-name/', views.search_domain_name,

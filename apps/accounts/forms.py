@@ -2,7 +2,7 @@
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
+from users.models import User
 
 
 class UserLoginForm(AuthenticationForm):
@@ -13,7 +13,9 @@ class UserLoginForm(AuthenticationForm):
 
 
 class RegistrationForm(UserCreationForm):
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+    email = forms.EmailField(
+        max_length=254, help_text='Required. Inform a valid email address.'
+    )
 
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	Domain to PNG
+{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <p>company_name - {{ domain.company_name }}</p>
+            <p>company_address  - {{ domain.company_address }}</p>
+            <p>telephone - {{ domain.telephone }}</p>
+            {% if domain.telephone2 %}
+                <p>telephone2 - {{ domain.telephone2 }}</p>
+            {% endif %}
+            {% if domain.telephone3 %}
+                <p>telephone3 - {{ domain.telephone3 }}</p>
+            {% endif %}
+
+            <p>email - {{ domain.email }}</p>
+            {% if domain.email2 %}
+                <p>email2 - {{ domain.email2 }}</p>
+            {% endif %}
+            {% if domain.email3 %}
+                <p>email3 - {{ domain.email3 }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <form action="." method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <p><b>Company Info</b></p>
+                <textarea name="text_company" cols="60" rows="4">
+{{ domain.company_name }}
+{{ domain.company_address }}
+                </textarea><br>
+            </div>
+            <div class="col-md-4">
+                <p><b>Contacts</b></p>
+                <textarea name="text_contacts" cols="60" rows="4">
+Phone: {{ domain.telephone }}
+Email: {{ domain.email }}
+                </textarea><br>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-2">
+                <label for="id_back_color">Цвет фона</label>
+                <input type="text" id="id_back_color" name="back_color" placeholder="#404040" value="{% if back_color_value %}{{ back_color_value }}{% endif %}">
+            </div>
+            <div class="col-md-2">
+                <label for="id_font_color">Цвет текста</label>
+                <input type="text" id="id_font_color" name="font_color" placeholder="#404040" value="{% if font_color_value %}{{ font_color_value }}{% endif %}">
+            </div>
+            <div class="col-md-3">
+                <label for="id_font_size">Размер шрифта</label>
+                <input type="number" id="id_font_size" name="font_size" value="{{ font_size }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-lg-offset-4">
+            <input type="submit" value="сгенерировать">
+        </div>
+    </form>
+    <div class="clearfix"></div>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+        {% if img_company %}
+            <img src="{% static img_company %}" alt="wrong">
+        {% endif %}
+        </div>
+        <div class="col-md-4">
+        {% if img_contacts %}
+            <img src="{% static img_contacts %}" alt="wrong">
+        {% endif %}
+        </div>
+    </div>
+{% endblock content %}

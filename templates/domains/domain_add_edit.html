@@ -22,133 +22,306 @@
 					</div>
 					<div class="panel-heading">
 						{% if domain %}
-							<a href="{% url 'domain-detail' pk=domain.pk %}">General</a>
-						 	|
+							<a href="{% url 'domain-detail' pk=domain.pk %}">General</a> |
 							<a href="{% url 'domain-logs' pk=domain.pk %}">Logs</a>
 						{% endif %}
 					</div>
 
 					<div class="panel panel-body">
-						{% if form.errors %}
-							{% for field in form %}
-								{% for error in field.errors %}
-									<div class="alert alert-danger">
-										<strong>{{ error|escape }}</strong>
-									</div>
-								{% endfor %}
-							{% endfor %}
-							{% for error in form.non_field_errors %}
-								<div class="alert alert-danger">
-									<strong>{{ error|escape }}</strong>
-								</div>
-							{% endfor %}
-						{% endif %}
-
-						<div class="row">
-							<form method="POST" action="." class="form-horizontal">
+						{% include 'inc/form-errors.html' %}
+                        <form method="POST" action="." class="form-horizontal">
+						    <div class="row">
 								{% csrf_token %}
-								<div class="form-group">
-									<label for="id_name" class="col-md-4 control-label">Name:</label>
-									<div class="col-md-4">
-										{{ form.name }}
-										<div class="js-error-name form-error" style="display: none;"></div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="id_company_name" class="col-md-4 control-label">Company name:</label>
-									<div class="col-md-4">
-{#										TODO: Add autocomplete#}
-										{{ form.company_name }}
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="id_company_address" class="col-md-4 control-label">Company address:</label>
-									<div class="col-md-4">
-										{{ form.company_address }}
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="id_telephone" class="col-md-4 control-label">Telephone:</label>
-									<div class="col-md-4">
-										{{ form.telephone }}
-									</div>
-									<div class="col-md-2">
-										<a href="#" class="btn btn-success js-show-telephone">Add telephone</a>
-									</div>
-								</div>
-								<div class="form-group add-telephone {% if not form.telephone2.value %}hidden{% endif %}">
-									<label for="id_telephone2" class="col-md-4 control-label">Telephone 2:</label>
-									<div class="col-md-4">
-										{{ form.telephone2 }}
-									</div>
-								</div>
-								<div class="form-group add-telephone {% if not form.telephone3.value %}hidden{% endif %}">
-									<label for="id_telephone3" class="col-md-4 control-label">Telephone 3:</label>
-									<div class="col-md-4">
-										{{ form.telephone3 }}
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="id_date_register" class="col-md-4 control-label">Date of domain registrations:</label>
-									<div class="col-md-4">
-										{{ form.date_register }}
-									</div>
-									<div class="col-md-2">
-										<a href="#" class="btn btn-success js-get-whois">Set current whois date</a>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="id_date_expire" class="col-md-4 control-label">Date of domain expiration:</label>
-									<div class="col-md-4">
-										{{ form.date_expire }}
-									</div>
-									<div class="col-md-2">
-										<div class="js-loader hidden"><i class="fa fa-spinner fa-spin fa-2x fa-fw margin-bottom"></i></div>
-										<div class="js-error-message text-danger"></div>
-									</div>
-								</div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <label for="id_name" class="control-label">Name:</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            {{ form.name }}
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="js-error-name form-error" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <label for="id_company_name" class="control-label">Company name:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.company_name }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <label for="id_company_address" class="control-label">Company address:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.company_address }}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <label for="id_telephone" class="control-label">Telephone:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.telephone }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a href="#" class="btn btn-success js-show-telephone">Add telephone</a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group add-telephone {% if not form.telephone2.value %}hidden{% endif %}">
+                                        <div class="col-md-4">
+                                            <label for="id_telephone2" class="control-label">Telephone 2:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.telephone2 }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group add-telephone {% if not form.telephone3.value %}hidden{% endif %}">
+                                        <div class="col-md-4">
+                                            <label for="id_telephone3" class="control-label">Telephone 3:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.telephone3 }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <label for="id_email" class="control-label">Email:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.email }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a href="#" class="btn btn-success js-show-email">Add email</a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group add-email {% if not form.email2.value %}hidden{% endif %}">
+                                        <div class="col-md-4">
+                                            <label for="id_email2" class="control-label">Email 2:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.email2 }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group add-email {% if not form.email3.value %}hidden{% endif %}">
+                                        <div class="col-md-4">
+                                            <label for="id_email3" class="control-label">Email 3:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.email3 }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-9">
+                                            <label for="id_notify_admin_editor" class="control-label">
+                                                Данные на
+                                                {% if form.instance.name %}
+                                                    <a href="http://{{ form.instance.name }}" target="_blank">сайте</a>
+                                                {% else %}
+                                                    сайте
+                                                {% endif %}
+                                                не актуальны надо внести изменения?
+                                            </label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form.notify_admin_editor }}
+                                        </div>
+                                    </div>
+                                    <div class="js-show-admin-editor {% if not form.notify_admin_editor.value %}hide{% endif %}">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <label for="id_admin_editor" class="control-label">Кого оповестить?</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{ form.admin_editor }}
+                                            </div>
 
-								<div class="form-group">
-									<label for="id_manager" class="col-md-4 control-label">Manager</label>
-									<div class="col-md-4">
-										{{ form.manager }}
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="id_admin" class="col-md-4 control-label">Admin:</label>
-									<div class="col-md-4">
-										{{ form.admin }}
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="id_pci_scan" class="col-md-4 control-label">PCI Scan Name:</label>
-									<div class="col-md-4">
-										{{ form.pci_scan_name }}
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="id_date_last_scan" class="col-md-4 control-label">Date of last scan:</label>
-									<div class="col-md-4">
-										{{ form.date_last_scan }}
-									</div>
-									<div class="col-md-2">
-										<div class="js-loader hidden"><i class="fa fa-spinner fa-spin fa-2x fa-fw margin-bottom"></i></div>
-										<div class="js-error-message text-danger"></div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="id_status" class="col-md-4 control-label">status:</label>
-									<div class="col-md-4">
-										{{ form.status }}
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="col-md-8 col-md-offset-4">
-										<button type="submit" class="btn btn-primary">Save</button>
-									</div>
-								</div>
-							</form>
-						</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <label for="id_editor_method" class="control-label">Сделать данные</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                {{ form.editor_method }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% if editor_admin_list %}
+                                        <p class="text-warning">
+                                            На данный момент {% for admin in editor_admin_list %} {{ admin }} {% endfor %}
+                                            уведомлен об изменении информации. Он подтвердит, как только сделает.
+                                            <br>Если вы хотите что-то поменять, то отправьте уведомление повторно или свяжитесь с ним в мессенджере.
+                                        </p>
+                                    {% endif %}
+
+
+                                    <div class="form-group">
+                                        <div class="col-md-9">
+                                            <label for="id_notify_admin_whois" class="control-label">
+                                                Данные в whois не актуальны надо внести изменения?
+                                            </label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form.notify_admin_whois }}
+                                        </div>
+                                    </div>
+                                    <div class="js-show-admin-whois {% if not form.notify_admin_whois.value %}hide{% endif %}">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <label for="id_admin_whois" class="control-label">Кого оповестить?</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{ form.admin_whois }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% if whois_admin_list %}
+                                        <p class="text-warning">
+                                            На данный момент {% for admin in whois_admin_list %} {{ admin }} {% endfor %}
+                                            уведомлен об изменении информации. Он подтвердит, как только сделает.
+                                            <br>Если вы хотите что-то поменять, то отправьте уведомление повторно или свяжитесь с ним в мессенджере.
+                                        </p>
+                                    {% endif %}
+
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <label for="id_date_register" class="control-label">Date registrations:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.date_register }}
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="js-loader hidden"><i class="fa fa-spinner fa-spin fa-2x fa-fw margin-bottom"></i></div>
+                                            <div class="js-error-message text-danger"></div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a href="#" class="btn btn-success js-get-whois">Set current whois date</a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <label for="id_date_expire" class="control-label">Date expiration:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.date_expire }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="js-loader hidden"><i class="fa fa-spinner fa-spin fa-2x fa-fw margin-bottom"></i></div>
+                                            <div class="js-error-message text-danger"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <label for="id_manager" class="control-label">Manager</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.manager }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <label for="id_admin" class="control-label">Admin:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.admin }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <label for="id_pci_scan_name" class="control-label">PCI Scan Name:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.pci_scan_name }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <label for="id_date_last_scan" class="control-label">Date of last scan:</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ form.date_last_scan }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+
+                                        <div class="text-center text-primary">
+                                            <p>Установить статус {% if domain %}(текущий - {{ domain.status }}){% endif %}</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-3">
+                                                <label for="id_status" class="control-label">status:</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                {{ form.status }}
+                                            </div>
+                                        </div>
+
+                                    <hr>
+                                    <div class="text-center text-primary">
+                                        <p>Редиректы
+                                        <p>Редиректы
+                                            (статус -
+                                                {% for admin in redirect_admin_list %}
+                                                    <span class="text-warning">{{ admin }} - Оповещен и уже делает</span>
+                                                {% empty %}
+                                                    <span class="text-success">Актуальный</span>
+                                                {% endfor %}
+                                            )
+                                        </p>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <label for="id_redirect" class="control-label">Redirect for email:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.redirect }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <label for="id_redirect_phone" class="control-label">Redirect for phone:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.redirect_phone }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-7">
+                                            <label for="id_notify_admin_registrar" class="control-label">Оповестить админа об изменении редиректов?</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form.notify_admin_registrar }}
+                                        </div>
+                                    </div>
+                                    <div class="js-show-admin-registrar {% if not form.notify_admin_registrar.value %}hide{% endif %}">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <label for="id_admin_registrar" class="control-label">Кого оповестить?</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ form.admin_registrar }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+						    </div>
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-6">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </form>
 					</div>
 				</div>
 			</div>
@@ -172,11 +345,43 @@
 			        $(this).removeClass('hidden');
 			        show = true
 				}
-            })
+            });
+            return false;
+        });
+		$('.js-show-email').on('click', function () {
+			var show_block = $('.add-email:hidden');
+			var show = false;
+			show_block.each(function () {
+			    if (!show){
+			        $(this).removeClass('hidden');
+			        show = true
+				}
+            });
+            return false;
         });
 
+		function Hider(targetObj){
+            var css_class = 'hide';
+            if (targetObj.hasClass(css_class))
+                targetObj.removeClass(css_class);
+            else
+                targetObj.addClass(css_class)
+        }
+
+        $('#id_notify_admin_registrar').on('click', function () {
+            Hider($('.js-show-admin-registrar'));
+        });
+
+		$('#id_notify_admin_editor').on('click', function () {
+		    Hider($('.js-show-admin-editor'));
+		});
+
+		$('#id_notify_admin_whois').on('click', function () {
+		    Hider($('.js-show-admin-whois'));
+		});
 
 		var domain_name = $('#id_name');
+		var domain_name_load_value = domain_name.val();
 		domain_name.autocomplete({
 			source: "{% url 'search-domain-name' %}",
 			minLength: 3,
@@ -193,7 +398,7 @@
 		};
 
 		domain_name.blur(function () {
-			if (this.value.length > 0) {
+			if (this.value.length > 0 && this.value !== domain_name_load_value ) {
 			    var error = $('.js-error-name');
 			    var _this = this;
 			    $.ajax({
@@ -212,13 +417,26 @@
                     }
 				})
 			}
-
         });
+
+		$('#id_company_name').autocomplete({
+			source: "{% url 'search-company-name' %}",
+			minLength: 3,
+			select: function(e, ui) {
+			    e.preventDefault();
+			    this.value = ui.item.name;
+			}
+		}).data('ui-autocomplete')._renderItem = function(ul, item) {
+			return $("<li>")
+				.attr("data-id", item.name)
+				.append(item.name)
+				.appendTo(ul);
+		};
 
 		$('.js-get-whois').on('click', function (){
 			var domain_name = $('#id_name').val();
 
-			if (domain_name.length == 0){
+			if (domain_name.length === 0){
 			    alert('domain name is empty!');
 			    return false;
 			}

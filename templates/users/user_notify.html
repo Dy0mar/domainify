@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% load static domains_tag%}
+
+{% block title %}
+	User info
+{% endblock title %}
+
+{% block head %}
+	{{ block.super }}
+	<link href="{% static 'css/toogle.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block container %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="row text-center">
+						<h3>User Notify</h3>
+					</div>
+
+					<div class="panel panel-body">
+                        {% if redirects %}
+                            <div class="row">
+                                <div class="col-md-12 table-responsive">
+                                    <h3>Подтвердить установление редиректа</h3>
+                                    <table class="table table-hover">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">Domain</th>
+                                                <th scope="col">Manager</th>
+                                                <th scope="col">Requestor</th>
+                                                <th scope="col">Redirect email</th>
+                                                <th scope="col">Redirect phone</th>
+                                                <th scope="col">Done</th>
+                                            </tr>
+                                        </thead>
+
+                                        {% for confirm_up in redirects %}
+                                            <tr class="text-danger">
+                                                <td><a href="{% url 'domain-detail' confirm_up.domain.pk %}">{{ confirm_up.domain }}</a></td>
+                                                <td>{{ confirm_up.domain.manager|default_if_none:'' }}</td>
+                                                <td>{{ confirm_up.user_changed|default_if_none:'' }}</td>
+                                                <td>{{ confirm_up.domain.redirect|default_if_none:'' }}</td>
+                                                <td>{{ confirm_up.domain.redirect_phone|default_if_none:'' }}</td>
+                                                <td><a class="text-danger" href="{% url 'confirm-up-done' %}?domain={{ confirm_up.domain.name }}&confirm=redirect">Подтвердить</a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if statuses %}
+                            <div class="row">
+                                <div class="col-md-12 table-responsive">
+                                    <h3>Подтвердить установление статуса</h3>
+                                    <table class="table table-hover">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">Domain</th>
+                                                <th scope="col">Manager</th>
+                                                <th scope="col">Requestor</th>
+                                                <th scope="col">Current</th>
+                                                <th scope="col">SET TO</th>
+                                                <th scope="col">Done</th>
+                                            </tr>
+                                        </thead>
+
+                                        {% for confirm_up in statuses %}
+                                            <tr class="text-danger">
+                                                <td><a href="{% url 'domain-detail' confirm_up.domain.pk %}">{{ confirm_up.domain }}</a></td>
+                                                <td>{{ confirm_up.domain.manager }}</td>
+                                                <td>{{ confirm_up.user_changed }}</td>
+                                                <td>{{ confirm_up.domain.status }}</td>
+                                                <td>{{ confirm_up.domain.status|cut:"REQUIRES_" }}</td>
+                                                <td><a class="text-danger" href="{% url 'confirm-up-done' %}?domain={{ confirm_up.domain.name }}&confirm=status">Подтвердить</a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if edits %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-12 table-responsive">
+                                    <h3>Подтвердить редактирование информации на сайте</h3>
+                                    <table class="table table-hover">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">Domain</th>
+                                                <th scope="col">Manager</th>
+                                                <th scope="col">Old_data</th>
+                                                <th scope="col">New_data</th>
+                                                <th scope="col">Done</th>
+                                            </tr>
+                                        </thead>
+
+                                        {% for record in edits %}
+                                            <tr class="text-danger">
+                                                <td><a href="{% url 'domain-detail' record.domain.pk %}">{{ record.domain }}</a></td>
+                                                <td>{{ record.domain.manager }}</td>
+                                                <td>
+                                                    {% for item in record.old_data.items %}
+                                                        {{ item.0 }} - {{ item.1 }} <br>
+                                                    {% endfor %}
+                                                </td>
+                                                <td>
+                                                    {% for item in record.new_data.items %}
+                                                        {{ item.0 }} - {{ item.1 }} <br>
+                                                    {% endfor %}
+                                                </td>
+                                                <td><a class="text-danger" href="{% url 'confirm-up-done' %}?domain={{ record.domain.name }}&confirm=editor">Подтвердить</a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock container %}
+{% block scripts %}
+	{{ block.super }}
+	<script>
+	$(function() {
+
+	    function makeRequest(url, data){
+	        if (data && url){
+	            $.ajax({
+                    url: url,
+                    data: data,
+                    success: function (data) {
+                        if (data.msg !== undefined){
+                            alert(data.msg)
+                        }
+                    }
+                });
+            }
+        }
+
+        $('.check_notification').on('click', function () {
+            var url = '{% url 'check-notification-method' %}';
+		    var data = {check_method: this.dataset.checkMethod};
+            makeRequest(url, data)
+        });
+
+		$('.slider').on('click', function () {
+		    var url;
+		    var data;
+
+		    if (this.dataset.name === 'notification'){
+		        url = '{% url 'change-notification-list' %}';
+		        data = {id: this.dataset.id}
+            }
+
+		    if (this.dataset.name === 'notification-method-email'){
+		        url = '{% url 'change-notification-method' %}';
+		        data = {name: 'email'}
+            }
+		    if (this.dataset.name === 'notification-method-pidgin'){
+		        url = '{% url 'change-notification-method' %}';
+		        data = {name: 'pidgin'}
+            }
+
+            makeRequest(url, data);
+        });
+	});
+	</script>
+{% endblock scripts %}

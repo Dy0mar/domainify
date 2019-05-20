@@ -6,8 +6,8 @@
 				<ul class="nav navbar-nav navbar-left">
 					<li><a class="{% if current_page == 'domain_list' %}current-page{% endif %}" href="/">Domain list</a></li>
 
-					{% if user.is_superuser or user.is_staff %}
-						<li><a class="{% if current_page == 'my_list' %}current-page{% endif %}" href="{% url 'my-domain-list' %}">My domain list</a></li>
+					{% if user.is_staff_or_admin %}
+						<li><a class="{% if current_page == 'my_list' %}current-page{% endif %}" href="{% url 'my-domain-list' %}">My domain list<span class="js-reminders-count"></span></a></li>
 						<li><a class="{% if current_page == 'domain_add' %}current-page{% endif %}" href="{% url 'domain-add' %}">Add Domain</a></li>
 						<li><a class="{% if current_page == 'import_domains' %}current-page{% endif %}" href="{% url 'import-domains' %}">Import Domains</a></li>
 						<li><a class="{% if current_page == 'export_domains '%}current-page{% endif %}" href="{% url 'export-domains' %}">Export Domains</a></li>
@@ -15,7 +15,8 @@
 
 					{% if user.is_superuser %}
 						<li><a class="{% if current_page == 'user_list' %}current-page{% endif %}" href="{% url 'user-list' %}">Users</a></li>
-					{% endif %}
+                        <li><a class="{% if current_page == 'notify' %}current-page{% endif %}" href="{% url 'notify' %}">Notify <span class="js-notify-count"></span></a></li>
+                    {% endif %}
 				</ul>
 			{% endif %}
 
@@ -24,7 +25,7 @@
 				<!-- Authentication Links -->
 				{% if user.is_authenticated %}
 					<li>
-						<a class="#" href="{% url 'user-info' %}"> {{ user.username }}({% if user.is_superuser %}admin{% elif user.is_staff %}manager{% else %}guest{% endif %})</a>
+						<a class="#" href="{% url 'user-profile' %}"> {{ user.username }}({% if user.is_superuser %}admin{% elif user.is_staff %}manager{% else %}guest{% endif %})</a>
 					</li>
 					<li><a href="{% url 'logout' %}">Logout</a></li>
 				{% else %}

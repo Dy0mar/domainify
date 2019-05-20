@@ -35,6 +35,11 @@
 	</td>
 	<td></td>
 	<td>
+        {% if data_filters|get_key:'alexa_status' %}
+            {{ data_filters|get_key:'alexa_status' }}
+        {% endif %}
+    </td>
+	<td>
 		{% if data_filters|get_key:'checks_pci' %}
 			{{ data_filters|get_key:'checks_pci' }}
 		{% endif %}
@@ -47,9 +52,11 @@
 	<td>&nbsp;</td>
 </tr>
 {% for domain in domain_list %}
-	<tr {% if domain in notification %} class="alert-danger"{% endif %}>
+	<tr 	{% if domain.status == 'CLOSED' %} class="alert alert-light"
+			{% elif domain in notification %} class="alert alert-danger"
+			{% endif %}>
 		<td>
-			{% if request.user.is_staff or request.user.is_superuser %}
+			{% if request.user.is_staff_or_admin %}
 				<a href="{% url 'domain-detail' domain.pk %}">{{ domain.name }}</a>
 			{% else %}
 				{{ domain.name }}
@@ -65,7 +72,7 @@
 		<td>{{ domain.date_register|date:"d.m.Y" }}</td>
 		<td>{{ domain.date_expire|date:"d.m.Y" }}</td>
 		<td>{% if form.date_request.value %}{{ form.date_request.value }}{% endif %}</td>
-
+        <td>{{ domain.alexa }}</td>
 		<td>
 			{% if domain.date_last_scan %}
 				{{ domain.date_last_scan|date:"d.m.Y" }}

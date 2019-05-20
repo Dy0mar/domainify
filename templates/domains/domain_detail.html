@@ -7,8 +7,6 @@
 
 {% block head %}
 	{{ block.super }}
-	<link href="{% static 'css/bootstrap-datepicker3.css' %}" rel="stylesheet">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 {% endblock head %}
 
 
@@ -23,14 +21,14 @@
 					<div class="panel-heading">
 						General
 						{% if domain %} |
-							<a href="{% url 'domain-logs' pk=domain.pk %}">Logs</a>
+							<a href="{% url 'domain-logs' pk=domain.pk %}">Logs <span class="js-domain-reminders-count"></span></a>
 						{% endif %}
 					</div>
 
 					<div class="panel panel-body">
 						<div class="row">
-							<div class="col-md-12">
-								<p><b>Domain name</b> - {{ domain.name }}</p>
+							<div class="col-md-4">
+                                <p><b>Domain name</b> - <a href="{{ domain.name }}" target="_blank">{{ domain.name }}</a></p>
 								<p><b>Company name</b> - {{ domain.company_name|default_if_none:'' }}</p>
 								<p><b>Company address</b> - {{ domain.company_address|default_if_none:'' }}</p>
 								<p>
@@ -38,14 +36,91 @@
 									{% if domain.telephone2 %}, {{ domain.telephone2 }}{% endif %}
 									{% if domain.telephone3 %}, {{ domain.telephone3 }}{% endif %}
 								</p>
+                                <p>
+									<b>Email</b> - {{ domain.email|default_if_none:'' }}
+									{% if domain.email2 %}, {{ domain.email2 }}{% endif %}
+									{% if domain.email3 %}, {{ domain.email3 }}{% endif %}
+								</p>
+                                <p><a href="{% url 'domain-to-image' domain.pk %}">Получить инфо картинкой</a></p>
+                                <hr>
 								<p><b>Date of domain registration</b> - {{ domain.date_register|date:'d.m.Y' }}</p>
 								<p><b>Date of domain expiration</b> - {{ domain.date_expire|date:'d.m.Y' }}</p>
 								<p><b>PCI DSS scan</b> - {{ domain.pci_scan_name|default_if_none:'' }}</p>
 								<p><b>The date of last scan</b> - {{ domain.date_last_scan|date:'d.m.Y' }}</p>
 								<p><b>Manager</b> - {{ domain.manager|default_if_none:'' }}</p>
 								<p><b>Admin of website</b> - {{ domain.admin|default_if_none:'' }}</p>
+
+                                <p><b>Redirect </b> - {{ domain.redirect }}</p>
+                                <p><b>Admins registrant</b> - {% for admin in admin_registrar %}{{ admin }} {% endfor %}</p>
+                                <p><b>Admin site editor</b> - {% for admin in admin_editors %}{{ admin }} {% endfor %}</p>
 								<h3><a href="{% url 'domain-edit' pk=domain.pk %}">Edit</a></h3>
+
+
 							</div>
+                            {% if perms.users.can_manage_alexa_traffic %}
+                                <div class="col-md-4">
+                                    <h4>Alexa traffic</h4>
+                                    <form method="post" id="alexa" class="form-horizontal">
+                                        {% csrf_token %}
+                                        {% include 'inc/form-errors.html' %}
+                                        <div class="form-group">
+                                            <div class="col-md-2">
+                                                <label for="id_alexa" class="control-label">Status:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ form.alexa }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-2">
+                                                <label for="id_alexa_comment" class="control-label">Comment:</label>
+                                            </div>
+                                            <div class="col-md-10">
+                                                {{ form.alexa_comment }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-2">
+                                                <label for="id_executors" class="control-label">Исполнитель:</label>
+                                            </div>
+                                            <div class="col-md-10">
+                                                {% if form.executors %}
+                                                    {{ form.executors }}
+                                                {% else%}
+                                                    {% for executor in executors  %}
+                                                        {{ executor.username }}&nbsp;
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        {% if initiator %}
+                                            <div class="form-group">
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Инициатор:</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    {{ initiator.username }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="pull-right">
+                                                    <button type="submit" class="btn btn-primary js-submit">Save</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="pull-right">
+                                                    {% if initiator == request.user %}
+                                                        {{ form.cancel }}
+                                                        <button type="button" id="js-button-cancel" class="btn btn-danger">Cancel!</button>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+						        </div>
+                            {% endif %}
 						</div>
 					</div>
 				</div>
@@ -55,97 +130,95 @@
 {% endblock container %}
 
 {% block scripts %}
-	{{ block.super }}
+    {{ block.super }}
+    <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+    <script>
 
-{#	<script type="text/javascript" src="{% static 'js/jquery-1.11.3.min.js' %}"></script>#}
-	<script type="text/javascript" src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
-	<script src="{% static 'js/jquery-ui.min.js' %}"></script>
-	<script>
-		$("#id_date_register, #id_date_expire, #id_date_last_scan").datepicker({
-			format: 'yyyy-mm-dd',
-			autoclose: true,
-			changeYear: true
-		});
+	$(function() {
+        var alexa_status = '{{ domain.alexa }}';
 
-		$('.js-show-telephone').on('click', function () {
-			var show_block = $('.add-telephone:hidden');
-			var show = false;
-			show_block.each(function () {
-			    if (!show){
-			        $(this).removeClass('hidden');
-			        show = true
-				}
-            })
+        $(document).ready(function() {
+	         if ($('#id_alexa').val() === 'OFF')
+                offAlexa();
+
+	         $.ajax({
+                url: "{% url "notifications" %}",
+                data: {name: '{{ domain.name }}'},
+                cache: false,
+                success: function(data) {
+                    $('.js-domain-reminders-count').html('('+data.count+')')
+                }
+            });
+	    });
+
+	    function offAlexa(){
+	        var comm = $('#id_alexa_comment');
+	        comm.val('');
+	        comm.attr('readonly', 'readonly');
+            var checkbox = $(':checkbox');
+            checkbox.prop('checked', false);
+            checkbox.prop('disabled', 'true');
+            $('.js-submit').prop('disabled', 'true')
+        }
+
+        function onAlexa(){
+            $('#id_alexa_comment').removeAttr('readonly');
+            $(':checkbox').removeAttr('disabled');
+            $('.js-submit').removeAttr('disabled')
+        }
+
+        $('#id_alexa').on('change', function () {
+            if (this.value === alexa_status && this.value === 'OFF')
+                offAlexa();
+            else
+                onAlexa()
         });
 
+        $('#js-button-cancel').on('click', function () {
+            $('#id_cancel').prop('checked', true);
+            $("#alexa").submit();
+        });
 
-		var domain_name = $('#id_name');
-		domain_name.autocomplete({
-			source: "{% url 'search-domain-name' %}",
-			minLength: 3,
-			appendTo: "#js-append-domain-name-res",
-			select: function(e, ui) {
-{#			FIXME: Select item not work #}
-			    this.value = ui.item.name
-			}
-		}).data('ui-autocomplete')._renderItem = function(ul, item) {
-			return $("<li>")
-				.attr("data-name", item.name)
-				.append(item.name)
-				.appendTo(ul);
-		};
-
-		domain_name.blur(function () {
-			if (this.value.length > 0) {
-			    var error = $('.js-error-name');
-			    $.ajax({
-			        url: "{% url 'domain-exists' %}",
-					data: {
-			            domain_name: this.value
-					},
-					success: function (data) {
-						if (data.exists){
-						    error.html('Domain exists!')
-						} else {
-                            error.html('')
+	    function makeRequest(url, data){
+	        if (data && url){
+	            $.ajax({
+                    url: url,
+                    data: data,
+                    success: function (data) {
+                        if (data.msg !== undefined){
+                            alert(data.msg)
                         }
                     }
-				})
-			}
+                });
+            }
+        }
 
+        $('.check_notification').on('click', function () {
+            var url = '{% url 'check-notification-method' %}';
+		    var data = {check_method: this.dataset.checkMethod};
+            makeRequest(url, data)
         });
 
-		$('.js-get-whois').on('click', function (){
-			var domain_name = $('#id_name').val();
+		$('.slider').on('click', function () {
+		    var url;
+		    var data;
 
-			if (domain_name.length == 0){
-			    alert('domain name is empty!');
-			    return false;
-			}
-			var loader = $('.js-loader');
-			var errors = $('.js-error-message');
+		    if (this.dataset.name === 'notification'){
+		        url = '{% url 'change-notification-list' %}';
+		        data = {id: this.dataset.id}
+            }
 
-			$.ajax({
-				url: '{% url 'get-whois' %}',
-				data: {
-					domain_name: domain_name
-				},
-				beforeSend: function (){
-				    loader.removeClass('hidden');
-					errors.html()
-				},
-				success: function (data) {
-					$('#id_date_register').val(data.creation_date);
-					$('#id_date_expire').val(data.expiration_date);
-				},
-				error: function (data) {
-					errors.html('Fail - ' + data)
-                },
-				complete: function () {
-					loader.addClass('hidden')
-                }
-			});
-			return false;
-		});
+		    if (this.dataset.name === 'notification-method-email'){
+		        url = '{% url 'change-notification-method' %}';
+		        data = {name: 'email'}
+            }
+		    if (this.dataset.name === 'notification-method-pidgin'){
+		        url = '{% url 'change-notification-method' %}';
+		        data = {name: 'pidgin'}
+            }
+
+            makeRequest(url, data);
+        });
+	});
 	</script>
-{% endblock %}
+{% endblock scripts %}

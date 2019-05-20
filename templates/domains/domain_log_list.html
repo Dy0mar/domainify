@@ -26,14 +26,16 @@
 					</div>
 					<div class="panel-heading">
 						{% if domain %}
-							<a href="{% url 'domain-detail' pk=domain.pk %}">General</a>|
+							<a href="{% url 'domain-detail' pk=domain.pk %}">General</a> |
 						{% endif %}
 						Logs
 					</div>
 
 					<div class="panel panel-body">
 						<div class="table-responsive" style="min-height: 200px">
-							<a href="?read=all">Read all</a>
+							{% if reader %}
+                                <a href="?read=all">Read all</a>
+							{% endif %}
 							<table class="table">
 								<thead class="thead-light">
 									<tr>
@@ -94,29 +96,3 @@
 	</div>
 
 {% endblock container %}
-
-{% block scripts %}
-	{{ block.super }}
-	<script src="{% static 'js/jquery-ui.min.js' %}"></script>
-	<script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
-	<script>
-		$(document).on('click', '.delete-object', function (){
-			var name = this.dataset.name;
-			var url = this.href;
-			var r = confirm("Delete this?\n" + name);
-			if (r === true) {
-				$.ajax({
-					url: url,
-					data: {
-						name: name,
-						id: this.dataset.id
-					},
-					success: function () {
-						window.location.reload();
-					}
-				});
-			}
-			return false;
-		});
-	</script>
-{% endblock %}

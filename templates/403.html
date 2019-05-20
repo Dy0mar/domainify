@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+	Domain {% if form.instance.pk %}Edit{% else %}Add{% endif %}
+{% endblock title %}
+
+{% block head %}
+	{{ block.super }}
+	<link href="{% static 'css/bootstrap-datepicker3.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+{% endblock head %}
+
+
+{% block container %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="row text-center">
+						<h3>Упс, недостаточно прав</h3>
+					</div>
+
+					<div class="panel panel-body">
+						<div class="row">
+                            <div class="col-lg-6"><h3>Проверка прав</h3>
+                                <p>Вы - {% if user.is_superuser %}admin{% elif user.is_staff %}manager{% else %}guest{% endif %}</p>
+{#                            #TODO: #}
+                                <p> Это сделаю позже - группы менеджеров</p>
+                                    {% if perms.users.managers %}
+                                        <span class="text-success">Добавлен!</span>
+                                    {% elif request.user.is_staff %}
+                                        <span class="text-danger">Вас надо добавить в группу менеджеров! Попросите любого из админов добавить вас в группу через админку сайта /admin/</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock container %}
+

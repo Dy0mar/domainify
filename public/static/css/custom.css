@@ -89,3 +89,13 @@
     text-align: right;
     color: #cc0000;
 }
+
+.messages{
+    padding: 10px 30px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+ul{
+    list-style-type:none;
+}
