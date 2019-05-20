@@ -1,4 +1,4 @@
-PROJECT = turbo
+PROJECT = domainify
 ENV ?= env
 HOST = localhost
 PORT = 8000
@@ -10,8 +10,6 @@ PIP = $(ENV)/bin/pip
 
 MANAGE = $(PYTHON) manage.py
 
-GRUNT = ./node_modules/.bin/grunt
-
 
 env:
 	virtualenv --system-site-packages $(ENV)
@@ -20,7 +18,7 @@ pep8:
 	$(PEP8) --statistics $(PROJECT) apps --exclude=migrations,settings_local.py
 
 pylint:
-	$(PYLINT) --rcfile=pylint.rc --load-plugins pylint_django turbo
+	$(PYLINT) --rcfile=pylint.rc --load-plugins pylint_django $(PROJECT)
 
 reqs: env
 	$(PIP) install -r requirements.txt
@@ -32,5 +30,10 @@ run:
 migrate:
 	$(MANAGE) migrate
 
-grunt:
-	$(GRUNT)
+celery:
+	. $(ENV)/bin/activate ; \
+	celery worker -A domainify --loglevel=info --concurrency=4 -B
+
+shell:
+	$(MANAGE) shell
+
